@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<data>
+
+    <width>1024</width>
+    <heigh>1080</heigh>
+    <bgColor>white</bgColor>
+    <nodeColor>red</nodeColor>
+    <nodeRadius>2.5</nodeRadius>
+
+</data>
