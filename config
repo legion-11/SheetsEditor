@@ -2,16 +2,19 @@
 
 <data>
 
-    <width>1024</width>
+    <width>1520</width>
     <heigh>1080</heigh>
     <bgColor>white</bgColor>
 
     <nodeColor>red</nodeColor>
-    <nodeRadius>2</nodeRadius>
+    <nodeRenderRadius>1</nodeRenderRadius>
+    <nodeWorkRadius>2.5</nodeWorkRadius>
 
-    <linePadx>10</linePadx>
+    <linePadx>20</linePadx>
+    <lineStartPointForNodes>20</lineStartPointForNodes>
     <lineColor>black</lineColor>
 
     <amountOfTimeInRow>4</amountOfTimeInRow>
+    <distanceBetwenLines>5</distanceBetwenLines>
 
 </data>
