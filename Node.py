@@ -7,13 +7,15 @@ NODE_RADIUS = float(e.find('nodeRadius').text)
 
 
 class Node:
-    """This nodes can be chanched by click on them on notes or """
+    """This node can be changed on notes by click on them"""
     r = NODE_RADIUS
 
-    def __init__(self, x, y, canvas):
+    def __init__(self, x, y, numberInLine, canvas):
         self.x = x
         self.y = y
+        self.numberInLine = numberInLine
         self.canvas = canvas
+        self.draw()
 
     def draw(self):
         self.canvas.create_oval(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r, fill=NODE_COLOR, outline=NODE_COLOR)
@@ -21,6 +23,10 @@ class Node:
     def hide(self):
         self.canvas.create_oval(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r, fill=BG_COLOR, outline=BG_COLOR)
 
-    def is_collision(self, eveX, eveY):
+    def isCollision(self, eveX, eveY):
         """return True if click on node"""
         return (eveX - self.x)**2+(eveY - self.y)**2 <= self.r**2
+
+    def change(self):
+        print("node",self.numberInLine, 'changed')
+        self.hide()

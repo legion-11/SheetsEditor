@@ -5,7 +5,13 @@
     <width>1024</width>
     <heigh>1080</heigh>
     <bgColor>white</bgColor>
+
     <nodeColor>red</nodeColor>
-    <nodeRadius>2.5</nodeRadius>
+    <nodeRadius>2</nodeRadius>
+
+    <linePadx>10</linePadx>
+    <lineColor>black</lineColor>
+
+    <amountOfTimeInRow>4</amountOfTimeInRow>
 
 </data>
