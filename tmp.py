@@ -8,17 +8,16 @@ BG_COLOR = e.find('bgColor').text
 
 
 def mouce_click(event):
-
-    if event.num == 1:
+    """temporary class to operate clicks"""
+    if event.num == 1:  # click <Button-1>
         colisions = [line.isCollision(event.x, event.y) for line in lines]
-        print(colisions)
         if colisions != [None]*len(colisions):
             num = [isinstance(item, int) for item in colisions].index(True)
             lines[num].nodes[colisions[num]].change()
 
-
-    elif event.num == 3:
-        lines.append(Line(event.y, canvas))
+    elif event.num == 3:  # click <Button-3>
+        lines.append(Line(event.y, canvas, transparent=True))
+        lines[-1].draw()
 
 lines =[]
 

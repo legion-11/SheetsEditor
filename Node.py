@@ -11,22 +11,31 @@ class Node:
     r = NODE_RADIUS
 
     def __init__(self, x, y, numberInLine, canvas):
+        """
+        create Node by coordinates x, y
+        @:param x - represent x coordinate of Node
+        @:param y - represent y coordinate of Node
+        @:param numberInLine - represent index of Node in Line class
+        @:param canvas - represent canvas where Node is drawing
+        """
         self.x = x
         self.y = y
         self.numberInLine = numberInLine
         self.canvas = canvas
-        self.draw()
 
     def draw(self):
+        """draw Node by coordinates that was given at creation"""
         self.canvas.create_oval(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r, fill=NODE_COLOR, outline=NODE_COLOR)
 
     def hide(self):
+        """fill Node with background color"""
         self.canvas.create_oval(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r, fill=BG_COLOR, outline=BG_COLOR)
 
     def isCollision(self, eveX, eveY):
-        """return True if click on node"""
+        """return True if click on Node else False"""
         return (eveX - self.x)**2+(eveY - self.y)**2 <= self.r**2
 
     def change(self):
-        print("node",self.numberInLine, 'changed')
+        """this will change Node with note for now it is abstract"""
+        print("node", self.numberInLine, 'changed')
         self.hide()
