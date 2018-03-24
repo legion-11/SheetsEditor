@@ -2,9 +2,11 @@
 
 <data>
 
-    <width>1520</width>
-    <heigh>1080</heigh>
+    <canvasWidth>720</canvasWidth>
+    <canvasHeigh>108000</canvasHeigh>
     <bgColor>white</bgColor>
+
+
 
     <nodeColor>red</nodeColor>
     <nodeRenderRadius>1</nodeRenderRadius>
@@ -15,6 +17,6 @@
     <lineColor>black</lineColor>
 
     <amountOfTimeInRow>4</amountOfTimeInRow>
-    <distanceBetwenLines>5</distanceBetwenLines>
+    <distanceBetweenLines>5</distanceBetweenLines>
 
 </data>

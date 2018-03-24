@@ -2,8 +2,8 @@ from tkinter import *
 from Row import Row
 import xml.etree.ElementTree
 e = xml.etree.ElementTree.parse('config').getroot()
-HEIGH = e.find('heigh').text
-WIDTH = e.find('width').text
+HEIGH = e.find('canvasHeigh').text
+WIDTH = e.find('canvasWidth').text
 BG_COLOR = e.find('bgColor').text
 
 

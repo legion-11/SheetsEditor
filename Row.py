@@ -3,7 +3,7 @@ from Line import Line
 
 e = xml.etree.ElementTree.parse('config').getroot()
 BG_COLOR = e.find('bgColor').text
-DISTANCE_BETWENE_LINES = float(e.find('distanceBetwenLines').text)
+DISTANCE_BETWEEN_LINES = float(e.find('distanceBetweenLines').text)
 NODE_WORK_RADIUS = float(e.find('nodeWorkRadius').text)
 
 
@@ -14,7 +14,7 @@ class Row:
         self.canvas = canvas
         self.lines = []
         for i in range(23):
-            self.lines.append(Line(y + DISTANCE_BETWENE_LINES * i, self.canvas, i,
+            self.lines.append(Line(y + DISTANCE_BETWEEN_LINES * i, self.canvas, i,
                                    transparent=False if (7 <= i <= 15 and i % 2) else True))
 
     def draw(self):

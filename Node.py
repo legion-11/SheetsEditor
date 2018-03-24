@@ -6,6 +6,7 @@ NODE_COLOR = e.find('nodeColor').text
 NODE_RENDER_RADIUS = float(e.find('nodeRenderRadius').text)
 NODE_WORK_RADIUS = float(e.find('nodeWorkRadius').text)
 
+
 class Node:
     """This node can be changed on notes by click on them"""
     radius = NODE_RENDER_RADIUS

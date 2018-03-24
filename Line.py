@@ -6,7 +6,7 @@ BG_COLOR = e.find('bgColor').text
 LINE_PAD_X = float(e.find('linePadx').text)
 LINE_START_POINT_FOR_NODES = float(e.find('lineStartPointForNodes').text)
 LINE_COLOR = e.find('lineColor').text
-WIDTH = float(e.find('width').text)
+WIDTH = float(e.find('canvasWidth').text)
 AMOUNT_OF_TIME_IN_ROW = int(e.find('amountOfTimeInRow').text)
 NODE_WORK_RADIUS = float(e.find('nodeWorkRadius').text)
 
