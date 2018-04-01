@@ -2,8 +2,10 @@ import tkinter as tk
 from Row import Row
 import xml.etree.ElementTree
 e = xml.etree.ElementTree.parse('config').getroot()
-HEIGH = e.find('canvasHeigh').text
-WIDTH = e.find('canvasWidth').text
+HEIGH = e.find('Heigh').text
+WIDTH = e.find('Width').text
+CANVAS_HEIGH = e.find('canvasHeigh').text
+CANVAS_WIDTH = e.find('canvasWidth').text
 BG_COLOR = e.find('bgColor').text
 
 
@@ -11,12 +13,12 @@ class ScrollableCanvas(tk.Frame):
     rows = []
 
     def __init__(self, root):
-        tk.Frame.__init__(self, root)
+        tk.Frame.__init__(self, root, width=WIDTH,height=HEIGH)
         self.canvas = tk.Canvas(self, width=WIDTH, height=HEIGH, background=BG_COLOR)
         self.xsb = tk.Scrollbar(self, orient="horizontal", command=self.canvas.xview)
         self.ysb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.ysb.set, xscrollcommand=self.xsb.set)
-        self.canvas.configure(scrollregion=(0, 0, WIDTH, HEIGH))
+        self.canvas.configure(scrollregion=(0, 0, CANVAS_WIDTH, CANVAS_HEIGH))
 
         self.xsb.grid(row=1, column=0, sticky="ew")
         self.ysb.grid(row=0, column=1, sticky="ns")
@@ -52,11 +54,7 @@ class ScrollableCanvas(tk.Frame):
                 self.rows[num].lines[collisions[num][0]].nodes[collisions[num][1]].change()
 
         elif event.num == 3:  # click <Button-3>
-            self.rows.append(Row(event.y, self.canvas))
+            self.rows.append(Row(self.canvas.canvasy(event.y), self.canvas))
             self.rows[-1].draw()
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    a = ScrollableCanvas(root).pack(fill="both", expand=False)
-    root.mainloop()

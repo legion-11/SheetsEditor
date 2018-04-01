@@ -1,22 +1,24 @@
 <?xml version="1.0"?>
 
 <data>
+    <Width>1220</Width>
+    <Heigh>800</Heigh>
 
-    <canvasWidth>720</canvasWidth>
-    <canvasHeigh>108000</canvasHeigh>
+    <canvasWidth>1600</canvasWidth>
+    <canvasHeigh>10800</canvasHeigh>
     <bgColor>white</bgColor>
-
-
 
     <nodeColor>red</nodeColor>
     <nodeRenderRadius>1</nodeRenderRadius>
-    <nodeWorkRadius>2.5</nodeWorkRadius>
+    <nodeWorkRadius>5</nodeWorkRadius>
 
     <linePadx>20</linePadx>
     <lineStartPointForNodes>20</lineStartPointForNodes>
     <lineColor>black</lineColor>
 
     <amountOfTimeInRow>4</amountOfTimeInRow>
-    <distanceBetweenLines>5</distanceBetweenLines>
+    <distanceBetweenLines>6</distanceBetweenLines>
 
+    <buttonWidth>30</buttonWidth>
+    <buttonHeigh>30</buttonHeigh>
 </data>
