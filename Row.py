@@ -9,12 +9,13 @@ NODE_WORK_RADIUS = float(e.find('nodeWorkRadius').text)
 
 class Row:
 
-    def __init__(self, y, canvas):
+    def __init__(self, y, numberOfRow, scanvas):
         self.y = y
-        self.canvas = canvas
+        self.scanvas = scanvas
         self.lines = []
+        self.numberOfRow = numberOfRow
         for i in range(23):
-            self.lines.append(Line(y + DISTANCE_BETWEEN_LINES * i, self.canvas, i,
+            self.lines.append(Line(y + DISTANCE_BETWEEN_LINES * i, i, self.numberOfRow, self.scanvas,
                                    transparent=False if (7 <= i <= 15 and i % 2) else True))
 
     def draw(self):
@@ -24,7 +25,7 @@ class Row:
         [line.hide() for line in self.lines]
 
     def isCollision(self, eveX, eveY):
-        if self.y - NODE_WORK_RADIUS <= eveY <= self.y + NODE_WORK_RADIUS ** 23:  # check if click was near row
+        if self.y - NODE_WORK_RADIUS <= eveY <= self.y + NODE_WORK_RADIUS * 23:  # check if move was near row
             for line in self.lines:
                 if line.isCollision(eveX, eveY):
                     return line.isCollision(eveX, eveY)

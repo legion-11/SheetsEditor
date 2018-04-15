@@ -4,7 +4,7 @@
     <Width>1220</Width>
     <Heigh>800</Heigh>
 
-    <canvasWidth>1600</canvasWidth>
+    <canvasWidth>1400</canvasWidth>
     <canvasHeigh>10800</canvasHeigh>
     <bgColor>white</bgColor>
 
@@ -12,13 +12,28 @@
     <nodeRenderRadius>1</nodeRenderRadius>
     <nodeWorkRadius>5</nodeWorkRadius>
 
-    <linePadx>20</linePadx>
-    <lineStartPointForNodes>20</lineStartPointForNodes>
+    <linePadx>15</linePadx>
+    <lineStartPointForNodes>60</lineStartPointForNodes>
+    <lineEndPointForNodes>20</lineEndPointForNodes>
     <lineColor>black</lineColor>
 
-    <amountOfTimeInRow>4</amountOfTimeInRow>
-    <distanceBetweenLines>6</distanceBetweenLines>
+    <amountOfTimeInRow>3</amountOfTimeInRow>
+    <amountOfNodeInTime>32</amountOfNodeInTime>
+    <distanceBetweenLines>5</distanceBetweenLines>
 
-    <buttonWidth>30</buttonWidth>
-    <buttonHeigh>30</buttonHeigh>
+    <buttonWidth>32</buttonWidth>
+    <buttonHeigh>32</buttonHeigh>
+
+    <notesWidth>58</notesWidth>
+    <notesHeigh>58</notesHeigh>
+    <notesExtraLineLen>8</notesExtraLineLen>
+
+    <restsWidth>66</restsWidth>
+    <restsHeigh>66</restsHeigh>
+
+    <barlinesWidth>60</barlinesWidth>
+    <barlinesHeigh>80</barlinesHeigh>
+
+    <shift>8</shift>
+
 </data>
