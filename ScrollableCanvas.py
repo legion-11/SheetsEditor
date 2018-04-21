@@ -20,6 +20,8 @@ BARS_WIDTH = int(e.find('barlinesWidth').text)
 BG_COLOR = e.find('bgColor').text
 DISTANCE_BETWEEN_LINES = float(e.find('distanceBetweenLines').text)
 
+START_Y = int(e.find('startRowY').text)
+
 
 class ScrollableCanvas(tk.Frame):
     rows = []
@@ -86,8 +88,7 @@ class ScrollableCanvas(tk.Frame):
                 self.activeNode.drawObj(self.panel.getPathToImage())
 
         elif event.num == 3:  # click <Button-3>
-            self.rows.append(Row(self.canvas.canvasy(event.y), len(self.rows), self))
-            self.rows[-1].draw()
+            self.createRows()
 
     def delete(self, event):
         if self.activeNode is not None:
@@ -97,14 +98,15 @@ class ScrollableCanvas(tk.Frame):
         collisions = [row.isCollision(self.canvas.canvasx(event.x), self.canvas.canvasy(event.y)) for row in self.rows]
         if collisions != [None] * len(collisions):
             if self.activeNode is not None:
-                self.activeNode.hide()
+                self.activeNode.hidePoint()
             num = [isinstance(item, list) for item in collisions].index(True)
             self.activeNode = self.rows[num].lines[collisions[num][0]].nodes[collisions[num][1]]
             self.activeNode.drawPoint()
 
     def createRows(self):
         if len(self.rows) == 0:
-            self.rows.append(Row(DISTANCE_BETWEEN_LINES * 23, len(self.rows), self))
-        self.rows.append(Row(self.rows[-1].y + DISTANCE_BETWEEN_LINES * 23, len(self.rows), self))
+            self.rows.append(Row(START_Y, len(self.rows), self))
+        else:
+            self.rows.append(Row(self.rows[-1].y + DISTANCE_BETWEEN_LINES * 25, len(self.rows), self))
         self.rows[-1].draw()
 

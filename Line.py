@@ -42,10 +42,10 @@ class Line:
             self.line = self.scanvas.canvas.create_line(LINE_PAD_X, self.y, WIDTH - LINE_PAD_X, self.y, fill=LINE_COLOR)
 
     def hide(self):
-        """hide Line and hide Nodes"""
+        """del Line and del Nodes"""
         self.scanvas.canvas.delete(self.line)
         self.transparent = True
-        [node.hide() for node in self.nodes]
+        [node.hidePoint() for node in self.nodes]
 
     def isCollision(self, eveX, eveY):
         """
@@ -56,3 +56,5 @@ class Line:
             for node in self.nodes:
                 if node.isCollision(eveX, eveY):
                     return [self.numberOfLine, node.numberInLine]
+
+
