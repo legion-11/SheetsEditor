@@ -42,12 +42,14 @@ class Node:
 
     def drawPoint(self):
         """draw round by coordinates that was given at creation"""
-        self.round = self.scanvas.canvas.create_oval(self.x - self.radius, self.y - self.radius, self.x + self.radius,
-                                             self.y + self.radius, fill=NODE_COLOR, outline=NODE_COLOR)
+        if self.round is None:
+            self.round = self.scanvas.canvas.create_oval(self.x - self.radius, self.y - self.radius, self.x + self.radius,
+                                                     self.y + self.radius, fill=NODE_COLOR, outline=NODE_COLOR)
 
     def hidePoint(self):
         """dell round"""
-        self.scanvas.canvas.delete(self.round)
+        if self.round is not None:
+            self.scanvas.canvas.delete(self.round)
 
     def isCollision(self, eveX, eveY):
         """return True if click on Node else False"""
@@ -71,6 +73,16 @@ class Node:
                             flag = True
                         else:
                             self.scanvas.rows[self.numberOfRow].lines[j].nodes[self.numberInLine].delExtraLine()
+            elif self.numberOfLine >= 17:
+                flag = False
+                for i in range(22, 15, -2):
+                    if flag:
+                        break
+                    for j in range(i, 23):
+                        if self.scanvas.rows[self.numberOfRow].lines[j].nodes[self.numberInLine].isNotEmpty():
+                            flag = True
+                        else:
+                            self.scanvas.rows[self.numberOfRow].lines[j].nodes[self.numberInLine].delExtraLine()
 
     def getNode(self) -> list:
         """return list of numberOfRow, numberOfLine, numberInLine"""
@@ -84,7 +96,7 @@ class Node:
         """draw images of note"""
         if path in self.scanvas.notes:
             self.delImages()
-            # del rest or barline if it is in the actual column
+            # del rest or barline if it is in the similar column
             if self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].isRested():
                 self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].delImages()
             # add extraLines
@@ -99,7 +111,11 @@ class Node:
             self.path = path
             # draw tail of the note
             if self.scanvas.notes[path][1] is not None:
-                self.tail = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][1])
+                if self.numberOfLine > 11:
+                    self.tail = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][1])
+                else:
+                    self.tail = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][2])
+
         # draw image of rest on the 10's line
         elif path in self.scanvas.rests or path in self.scanvas.barlines:
             if self.numberOfLine == 10:
@@ -111,6 +127,12 @@ class Node:
             # del of another images on the  same column
             else:
                 self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].drawObj(path)
+
+        elif path in self.scanvas.modifications:
+            self.delImages()
+            # draw of head of the rest
+            self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.modifications[path])
+            self.path = path
 
     def addExtraLine(self):
         """draw small line across node"""

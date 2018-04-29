@@ -17,9 +17,9 @@ class ButtonsPanel(tk.Frame):
             self.images.append(batchResize(i, BUTTON_WIDTH, BUTTON_HEIGH))
         self.columns = [ttk.Button(self, image=self.images[i], command=lambda i=i: self.btnPressed(i))
                         for i in range(len(self.images))]
-        [self.columns[i].grid(row=i if i < len(startRowSigns + modifications + barlines + aboveSigns)
-                              else i - len(startRowSigns + modifications + barlines + aboveSigns),
-                              column=0 if i < len(startRowSigns + modifications + barlines + aboveSigns)
+        [self.columns[i].grid(row=i if i < len(startRowSigns + time + modifications + temp + barlines + aboveSigns)
+                              else i - len(startRowSigns + time + modifications + temp + barlines + aboveSigns),
+                              column=0 if i < len(startRowSigns + time + modifications + temp + barlines + aboveSigns)
                               else 1) for i in range(len(self.columns))]
 
     def btnPressed(self, index):

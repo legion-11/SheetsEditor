@@ -34,6 +34,13 @@
     <barlinesWidth>60</barlinesWidth>
     <barlinesHeigh>80</barlinesHeigh>
 
+    <modificationsWidth>50</modificationsWidth>
+    <modificationsHeigh>50</modificationsHeigh>
+
+    <startRowSignsWidth>80</startRowSignsWidth>
+    <startRowSignsHeigh>80</startRowSignsHeigh>
+    <xToPasteClef>30</xToPasteClef>
+
     <shift>8</shift>
 
     <startRowY>20</startRowY>

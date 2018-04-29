@@ -8,22 +8,23 @@ def batchResize(image, width, height):
 
 
 startRowSigns = [r'assets/startrowsigns/g clef.png',
-                 r'assets/startrowsigns/f clef.png',
-                 r'assets/startrowsigns/common time.png']
+                 r'assets/startrowsigns/f clef.png']
+
+time = [r'assets/startrowsigns/common time.png']
 
 barlines = ['assets/barlines/single barline.png',
             'assets/barlines/final barline.png',
             'assets/barlines/left repeat sign.png',
             'assets/barlines/right repeat sign.png']
 
-modifications = ['assets/modifications/dotnote.png',
-                 'assets/modifications/double flat.png',
+modifications = ['assets/modifications/double flat.png',
                  'assets/modifications/double sharp.png',
                  'assets/modifications/flat.png',
                  'assets/modifications/natural.png',
-                 'assets/modifications/sharp.png',
-                 'assets/modifications/slur.png',
-                 'assets/modifications/staccato.png']
+                 'assets/modifications/sharp.png']
+temp = ['assets/temp/dotnote.png',
+        'assets/temp/slur.png',
+        'assets/temp/staccato.png']
 
 aboveSigns = ['assets/abovesigns/crescendo.png',
               'assets/abovesigns/decrescendo.png',
@@ -49,7 +50,7 @@ notes = ['assets/notes/breve.png',
          'assets/notes/sixty-fourth note.png',
          'assets/notes/one hundred twenty-eighth note.png']
 
-ColPath = startRowSigns + barlines + modifications + aboveSigns + rests + notes
+ColPath = startRowSigns+ time + barlines + modifications + temp + aboveSigns + rests + notes
 
 heads = ['assets/heads/breve.png',
          'assets/heads/filled.png',
