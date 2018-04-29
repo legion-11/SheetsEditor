@@ -128,11 +128,15 @@ class Node:
             else:
                 self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].drawObj(path)
 
+        # draw modificator
         elif path in self.scanvas.modifications:
             self.delImages()
             # draw of head of the rest
             self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.modifications[path])
             self.path = path
+
+        elif path in self.scanvas.startRowSigns:
+            self.scanvas.rows[self.numberOfRow].changeClef(path)
 
     def addExtraLine(self):
         """draw small line across node"""

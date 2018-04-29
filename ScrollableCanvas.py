@@ -100,14 +100,8 @@ class ScrollableCanvas(tk.Frame):
     def mouce_click(self, event):
         """temporary class to operate clicks"""
         if event.num == 1:  # click <Button-1>
-            if self.activeNode is not None and (self.panel.getPathToImage() in self.notes or
-                                                self.panel.getPathToImage() in self.rests or
-                                                self.panel.getPathToImage() in self.barlines or
-                                                self.panel.getPathToImage() in self.modifications):
+            if self.activeNode is not None:
                 self.activeNode.drawObj(self.panel.getPathToImage())
-
-            if self.activeNode is not None and self.panel.getPathToImage() in self.startRowSigns:
-                self.rows[self.activeNode.numberOfRow].changeClef(self.panel.getPathToImage())
 
         elif event.num == 3:  # click <Button-3>
             self.createRows()
