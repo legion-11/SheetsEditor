@@ -1,4 +1,5 @@
 import xml.etree.ElementTree
+from Link import Link
 e = xml.etree.ElementTree.parse('config').getroot()
 
 LINE_COLOR = e.find('lineColor').text
@@ -13,6 +14,8 @@ NOTES_WIDTH = int(e.find('notesWidth').text)
 
 RESTS_HEIGH = int(e.find('restsHeigh').text)
 RESTS_WIDTH = int(e.find('restsWidth').text)
+
+SHIFT_FOR_DOT = int(e.find('shiftForDot').text)
 
 
 class Node:
@@ -39,6 +42,8 @@ class Node:
         self.tail = None
         self.extraLine = None
         self.path = None
+        self.link = None
+        self.dot = None
 
     def drawPoint(self):
         """draw round by coordinates that was given at creation"""
@@ -50,6 +55,7 @@ class Node:
         """dell round"""
         if self.round is not None:
             self.scanvas.canvas.delete(self.round)
+            self.round = None
 
     def isCollision(self, eveX, eveY):
         """return True if click on Node else False"""
@@ -115,6 +121,8 @@ class Node:
                     self.tail = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][1])
                 else:
                     self.tail = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][2])
+            if self.link is not None:
+                self.link.draw()
 
         # draw image of rest on the 10's line
         elif path in self.scanvas.rests or path in self.scanvas.barlines:
@@ -150,5 +158,31 @@ class Node:
             self.extraLine = None
 
     def isNotEmpty(self):
-        """return path to the image of the note or rest or ..."""
+        """return path to the image of the note or rest or ...
+        can be used for checking if Node is not empty"""
         return self.path is not None
+
+    def drawLink(self, node):
+        self.link = Link(self.scanvas, self, node)
+        node.setLink(self.link)
+        self.link.draw()
+
+    def setLink(self, link):
+        self.link = link
+
+    def delLink(self):
+        self.link.delete()
+
+    def highestNote(self):
+        for i in range(23):
+            if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes:
+                return self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine]
+
+    def lowestNote(self):
+        for i in range(23,-1,-1):
+            if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes:
+                return self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine]
+
+    def dotNote(self):
+        if self.path in self.scanvas.notes:
+            self.dot = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.dot['assets/temp/dot.png'])

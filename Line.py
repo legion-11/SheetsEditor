@@ -2,7 +2,6 @@ import xml.etree.ElementTree
 from Node import Node
 
 e = xml.etree.ElementTree.parse('config').getroot()
-BG_COLOR = e.find('bgColor').text
 LINE_PAD_X = float(e.find('linePadx').text)
 LINE_START_POINT_FOR_NODES = float(e.find('lineStartPointForNodes').text)
 LINE_END_POINT_FOR_NODES = float(e.find('lineEndPointForNodes').text)
@@ -18,7 +17,7 @@ class Line:
     def __init__(self, y, numberOfLine, numberOfRow, scanvas, transparent):
         """
         @:param y - y coordinate of horizontal line
-        @:param transparent - if it's True line has background color
+        @:param transparent - if it's True line don't draw
         @:param canvas - represent canvas where Line is drawing
         """
         self.y = y
@@ -44,7 +43,7 @@ class Line:
     def hide(self):
         """del Line and hide Nodes"""
         self.scanvas.canvas.delete(self.line)
-        [node.hidePoint() for node in self.nodes]
+        [node.delImages() for node in self.nodes]
 
     def isCollision(self, eveX, eveY):
         """

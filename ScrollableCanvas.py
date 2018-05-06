@@ -1,6 +1,6 @@
 import tkinter as tk
 from Row import Row
-from PathToImage import batchResize, rests, barlines, modifications, startRowSigns
+from PathToImage import batchResize, rests, barlines, modifications, startRowSigns, temp
 import xml.etree.ElementTree
 e = xml.etree.ElementTree.parse('config').getroot()
 HEIGH = e.find('Heigh').text
@@ -52,6 +52,10 @@ class ScrollableCanvas(tk.Frame):
 
     startRowSigns = {}
 
+    dot = {}
+
+    node = None  # Node for creation Links between this Node and another
+
     def __init__(self, root, panel):
         tk.Frame.__init__(self, root, width=WIDTH, height=HEIGH)
         self.panel = panel
@@ -65,9 +69,10 @@ class ScrollableCanvas(tk.Frame):
             self.barlines.update([[i, batchResize(i, BARS_WIDTH, BARS_HEIGH)]])
         for i in modifications:
             self.modifications.update([[i, batchResize(i, MODS_WIDTH, MODS_HEIGH)]])
-
         for i in startRowSigns:
             self.startRowSigns.update([[i, batchResize(i, START_ROW_WIDTH, START_ROW_HEIGH)]])
+        self.dot.update([['assets/temp/dot.png', batchResize('assets/temp/dot.png', NOTES_WIDTH, NOTES_HEIGH)]])
+
         self.canvas = tk.Canvas(self, width=WIDTH, height=HEIGH, background=BG_COLOR)
         self.xsb = tk.Scrollbar(self, orient="horizontal", command=self.canvas.xview)
         self.ysb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
@@ -100,8 +105,22 @@ class ScrollableCanvas(tk.Frame):
     def mouce_click(self, event):
         """temporary class to operate clicks"""
         if event.num == 1:  # click <Button-1>
-            if self.activeNode is not None:
+            if self.activeNode is not None and self.panel.getPathToImage() not in temp:
                 self.activeNode.drawObj(self.panel.getPathToImage())
+
+            elif self.activeNode is not None and self.panel.getPathToImage() == 'assets/temp/slur.png':
+                if self.node is None and (self.activeNode.path in self.notes):
+                    self.node = self.activeNode
+
+                elif self.node is not None and\
+                        (self.activeNode.path in self.notes) and\
+                        (self.node.numberOfRow == self.activeNode.numberOfRow) and\
+                        (self.node.numberInLine != self.activeNode.numberInLine):
+                    self.node.drawLink(self.activeNode)
+                    self.node = None
+
+            elif self.activeNode is not None and self.panel.getPathToImage() == 'assets/temp/dotnote.png':
+                self.activeNode.dotNote()
 
         elif event.num == 3:  # click <Button-3>
             self.createRows()
@@ -113,17 +132,18 @@ class ScrollableCanvas(tk.Frame):
     def aiming(self, event):
         collisions = [row.isCollision(self.canvas.canvasx(event.x), self.canvas.canvasy(event.y)) for row in self.rows]
         if collisions != [None] * len(collisions):
-            if self.activeNode is not None:
-                self.activeNode.hidePoint()
             num = [isinstance(item, list) for item in collisions].index(True)
-            self.activeNode = self.rows[num].lines[collisions[num][0]].nodes[collisions[num][1]]
-            self.activeNode.drawPoint()
+            if self.activeNode != self.rows[num].lines[collisions[num][0]].nodes[collisions[num][1]]:
+                if self.activeNode is not None:
+                    self.activeNode.hidePoint()
+                self.activeNode = self.rows[num].lines[collisions[num][0]].nodes[collisions[num][1]]
+                self.activeNode.drawPoint()
 
-    def createRows(self):
+    def createRows(self, clef=r'assets/startrowsigns/g clef.png'):
         if len(self.rows) == 0:
-            self.rows.append(Row(START_Y, len(self.rows), self))
+            self.rows.append(Row(START_Y, len(self.rows), self, clef))
         else:
-            if self.rows[-1].y < CANVAS_HEIGH - 2 * DISTANCE_BETWEEN_LINES * 27:
-                self.rows.append(Row(self.rows[-1].y + DISTANCE_BETWEEN_LINES * 27, len(self.rows), self))
+            if self.rows[-1].y < CANVAS_HEIGH - 2 * DISTANCE_BETWEEN_LINES * 28:
+                self.rows.append(Row(self.rows[-1].y + DISTANCE_BETWEEN_LINES * 28, len(self.rows), self, clef))
         self.rows[-1].draw()
 

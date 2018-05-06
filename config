@@ -10,14 +10,14 @@
 
     <nodeColor>red</nodeColor>
     <nodeRenderRadius>1</nodeRenderRadius>
-    <nodeWorkRadius>5</nodeWorkRadius>
+    <nodeWorkRadius>6</nodeWorkRadius>
 
     <linePadx>15</linePadx>
     <lineStartPointForNodes>60</lineStartPointForNodes>
     <lineEndPointForNodes>20</lineEndPointForNodes>
     <lineColor>black</lineColor>
 
-    <amountOfTimeInRow>3</amountOfTimeInRow>
+    <amountOfTimeInRow>1</amountOfTimeInRow>
     <amountOfNodeInTime>32</amountOfNodeInTime>
     <distanceBetweenLines>5</distanceBetweenLines>
 
@@ -41,8 +41,9 @@
     <startRowSignsHeigh>80</startRowSignsHeigh>
     <xToPasteClef>30</xToPasteClef>
 
-    <shift>8</shift>
-
+    <shift>10</shift>
+    <shiftForDot>10</shiftForDot>
     <startRowY>20</startRowY>
+
 
 </data>

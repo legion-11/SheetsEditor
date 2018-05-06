@@ -24,11 +24,10 @@ modifications = ['assets/modifications/double flat.png',
                  'assets/modifications/sharp.png']
 temp = ['assets/temp/dotnote.png',
         'assets/temp/slur.png',
-        'assets/temp/staccato.png']
+        'assets/temp/staccato.png',
+        'assets/temp/compose.png']
 
-aboveSigns = ['assets/abovesigns/crescendo.png',
-              'assets/abovesigns/decrescendo.png',
-              'assets/abovesigns/fermata .png']
+aboveSigns = ['assets/abovesigns/fermata .png']
 
 rests = ['assets/rests/multi rest.png',
          'assets/rests/whole rest.png',
