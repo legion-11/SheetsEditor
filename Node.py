@@ -8,6 +8,7 @@ NODE_COLOR = e.find('nodeColor').text
 
 NODE_RENDER_RADIUS = float(e.find('nodeRenderRadius').text)
 NODE_WORK_RADIUS = float(e.find('nodeWorkRadius').text)
+DISTANCE_BETWEEN_LINES = float(e.find('distanceBetweenLines').text)
 
 NOTES_HEIGH = int(e.find('notesHeigh').text)
 NOTES_WIDTH = int(e.find('notesWidth').text)
@@ -17,6 +18,14 @@ RESTS_WIDTH = int(e.find('restsWidth').text)
 
 SHIFT_FOR_DOT = int(e.find('shiftForDot').text)
 
+LINE_PAD_X = float(e.find('linePadx').text)
+LINE_START_POINT_FOR_NODES = float(e.find('lineStartPointForNodes').text)
+LINE_END_POINT_FOR_NODES = float(e.find('lineEndPointForNodes').text)
+WIDTH = float(e.find('canvasWidth').text)
+AMOUNT_OF_TIME_IN_ROW = int(e.find('amountOfTimeInRow').text)
+AMOUNT_OF_NODE_IN_TIME = int(e.find('amountOfNodeInTime').text)
+DISTANCE_BETWEN_NODES = (WIDTH - LINE_PAD_X - LINE_START_POINT_FOR_NODES - LINE_END_POINT_FOR_NODES) / (AMOUNT_OF_TIME_IN_ROW * AMOUNT_OF_NODE_IN_TIME)
+SHIFT_IN_ACCORD = int(e.find('notesShiftInAccord').text)
 
 class Node:
     """This node can be changed on notes by click on them"""
@@ -59,7 +68,9 @@ class Node:
 
     def isCollision(self, eveX, eveY):
         """return True if click on Node else False"""
-        return (eveX - self.x)**2+(eveY - self.y)**2 <= self.workRadius ** 2
+        return self.y - DISTANCE_BETWEEN_LINES//4 < eveY < self.y + DISTANCE_BETWEEN_LINES//4 and\
+            self.x - DISTANCE_BETWEN_NODES // 2 < eveX < self.x + DISTANCE_BETWEN_NODES // 2
+
 
     def delImages(self):
         """delete images obj, tail, extraLines and path of Node"""
@@ -112,15 +123,26 @@ class Node:
             elif self.numberOfLine >= 17:
                 for i in range(17, self.numberOfLine+1, 2):
                     self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].addExtraLine()
+
             # draw of head of the note
-            self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][0])
+            try:
+                if self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine + 1].nodes[self.numberInLine].isNotEmpty() or\
+                self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].isNotEmpty():
+                    self.obj = self.scanvas.canvas.create_image(self.x + SHIFT_IN_ACCORD, self.y, image=self.scanvas.notes[path][0])
+                else:
+                    self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][0])
+            except IndexError:
+                pass
             self.path = path
+
             # draw tail of the note
             if self.scanvas.notes[path][1] is not None:
                 if self.numberOfLine > 11:
                     self.tail = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][1])
                 else:
-                    self.tail = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][2])
+                    if self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine + 1].nodes[self.numberInLine].isNotEmpty() or \
+                            self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].isNotEmpty():
+                        self.tail = self.scanvas.canvas.create_image(self.x + SHIFT_IN_ACCORD, self.y, image=self.scanvas.notes[path][2])
             if self.link is not None:
                 self.link.draw()
 

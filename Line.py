@@ -9,7 +9,7 @@ LINE_COLOR = e.find('lineColor').text
 WIDTH = float(e.find('canvasWidth').text)
 AMOUNT_OF_TIME_IN_ROW = int(e.find('amountOfTimeInRow').text)
 AMOUNT_OF_NODE_IN_TIME = int(e.find('amountOfNodeInTime').text)
-NODE_WORK_RADIUS = float(e.find('nodeWorkRadius').text)
+DISTANCE_BETWEEN_LINES = float(e.find('distanceBetweenLines').text)
 
 
 class Line:
@@ -50,7 +50,7 @@ class Line:
         return list with [index of Line, index of Node] that was clicked on
         return None if click was far
         """
-        if self.y-NODE_WORK_RADIUS <= eveY <= self.y+NODE_WORK_RADIUS:  # check if click was near line
+        if self.y-DISTANCE_BETWEEN_LINES <= eveY <= self.y+DISTANCE_BETWEEN_LINES:  # check if click was near line
             for node in self.nodes:
                 if node.isCollision(eveX, eveY):
                     return [self.numberOfLine, node.numberInLine]

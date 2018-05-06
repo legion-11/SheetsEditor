@@ -27,6 +27,7 @@
     <notesWidth>58</notesWidth>
     <notesHeigh>58</notesHeigh>
     <notesExtraLineLen>8</notesExtraLineLen>
+    <notesShiftInAccord>8</notesShiftInAccord>
 
     <restsWidth>66</restsWidth>
     <restsHeigh>66</restsHeigh>
@@ -49,4 +50,5 @@
     <smallCanvasWidth>100</smallCanvasWidth>
     <smallCanvasHeigh>100</smallCanvasHeigh>
     <sizeOfNums>18</sizeOfNums>
+
 </data>
