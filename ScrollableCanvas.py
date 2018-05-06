@@ -1,6 +1,6 @@
 import tkinter as tk
 from Row import Row
-from PathToImage import batchResize, rests, barlines, modifications, startRowSigns, temp
+from PathToImage import batchResize, rests, barlines, modifications, startRowSigns, temp, time
 import xml.etree.ElementTree
 e = xml.etree.ElementTree.parse('config').getroot()
 HEIGH = e.find('Heigh').text
@@ -91,7 +91,7 @@ class ScrollableCanvas(tk.Frame):
 
         self.canvas.bind("<Button-1>", self.mouce_click)
         self.canvas.bind("<Button-3>", self.mouce_click, '+')
-        root.bind("<space>", self.delete)  # change to "<Button-3>" later
+        root.bind("<space>", self.createRows)
 
         self.canvas.bind("<Motion>", self.aiming)
 
@@ -105,7 +105,7 @@ class ScrollableCanvas(tk.Frame):
     def mouce_click(self, event):
         """temporary class to operate clicks"""
         if event.num == 1:  # click <Button-1>
-            if self.activeNode is not None and self.panel.getPathToImage() not in temp:
+            if self.activeNode is not None and self.panel.getPathToImage() not in temp + time:
                 self.activeNode.drawObj(self.panel.getPathToImage())
 
             elif self.activeNode is not None and self.panel.getPathToImage() == 'assets/temp/slur.png':
@@ -122,12 +122,14 @@ class ScrollableCanvas(tk.Frame):
             elif self.activeNode is not None and self.panel.getPathToImage() == 'assets/temp/dotnote.png':
                 self.activeNode.dotNote()
 
-        elif event.num == 3:  # click <Button-3>
-            self.createRows()
+            elif self.activeNode is not None and self.panel.getPathToImage() == r'assets/startrowsigns/common time.png':
+                print('a')
+                self.rows[self.activeNode.numberOfRow].chageTemp(self.panel.numerator, self.panel.denominator)
 
-    def delete(self, event):
-        if self.activeNode is not None:
-            self.activeNode.delImages()
+        elif event.num == 3:  # click <Button-3>
+            self.node = None
+            if self.activeNode is not None:
+                self.activeNode.delImages()
 
     def aiming(self, event):
         collisions = [row.isCollision(self.canvas.canvasx(event.x), self.canvas.canvasy(event.y)) for row in self.rows]
@@ -139,11 +141,11 @@ class ScrollableCanvas(tk.Frame):
                 self.activeNode = self.rows[num].lines[collisions[num][0]].nodes[collisions[num][1]]
                 self.activeNode.drawPoint()
 
-    def createRows(self, clef=r'assets/startrowsigns/g clef.png'):
+    def createRows(self, event, clef=r'assets/startrowsigns/g clef.png'):
         if len(self.rows) == 0:
             self.rows.append(Row(START_Y, len(self.rows), self, clef))
+            self.rows[0].chageTemp(self.panel.numerator, self.panel.denominator)
         else:
             if self.rows[-1].y < CANVAS_HEIGH - 2 * DISTANCE_BETWEEN_LINES * 28:
                 self.rows.append(Row(self.rows[-1].y + DISTANCE_BETWEEN_LINES * 28, len(self.rows), self, clef))
         self.rows[-1].draw()
-

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 from pickle import dump, load
 from ScrollableCanvas import ScrollableCanvas
 from ButtonsPanel import ButtonsPanel
@@ -30,29 +30,36 @@ class Main:
         self.scanvas.pack(fill="both", expand=True, side=tk.RIGHT)
         self.root.mainloop()
 
-    def open(self, file=r"Save dir/file1.txt"):
+    def open(self):
+        file = filedialog.askopenfilename(initialdir="/", title="Select file",
+                                                   filetypes=(("SheetsEditor files", "*.she"), ("all files", "*.*")))
         for i in self.scanvas.rows:
             i.hide()
         self.scanvas.rows.clear()
-        with open(file, "rb") as fileR:
-            tmp = load(fileR)
-            data = tmp['data']
-            links = tmp['links']
-            clefs = tmp['clefs']
-        for row in range(len(data)):
-            self.scanvas.createRows()
-            for line in range(len(data[row])):
-                for node in range(len(data[row][line])):
-                    self.scanvas.rows[row].lines[line].nodes[node].drawObj(data[row][line][node])
-                    if links[row][line][node] is not None:
-                        self.scanvas.rows[row].lines[line].nodes[node].drawLink(
-                            self.scanvas.rows[links[row][line][node][0]]
-                                        .lines[links[row][line][node][1]]
-                                        .nodes[links[row][line][node][2]])
-        for i in range(len(clefs)):
-            self.scanvas.rows[i].changeClef(clefs[i])
+        try:
+            with open(file, "rb") as fileR:
+                tmp = load(fileR)
+                data = tmp['data']
+                links = tmp['links']
+                clefs = tmp['clefs']
+            for row in range(len(data)):
+                self.scanvas.createRows('')
+                for line in range(len(data[row])):
+                    for node in range(len(data[row][line])):
+                        self.scanvas.rows[row].lines[line].nodes[node].drawObj(data[row][line][node])
+                        if links[row][line][node] is not None:
+                            self.scanvas.rows[row].lines[line].nodes[node].drawLink(
+                                self.scanvas.rows[links[row][line][node][0]]
+                                            .lines[links[row][line][node][1]]
+                                            .nodes[links[row][line][node][2]])
+            for i in range(len(clefs)):
+                self.scanvas.rows[i].changeClef(clefs[i])
+        except FileNotFoundError:
+            pass
 
-    def save(self, file=r"Save dir/file1.txt"):
+    def save(self):
+        file = filedialog.asksaveasfilename(initialdir="/", title="Select file",
+                                             filetypes=(("SheetsEditor files", "*.she"), ("all files", "*.*"))) + '.she'
         data = []
         links = []
         clefs = []

@@ -163,6 +163,8 @@ class Node:
         return self.path is not None
 
     def drawLink(self, node):
+        if self.link is not None:
+            self.scanvas.canvas.delete(self.link)
         self.link = Link(self.scanvas, self, node)
         node.setLink(self.link)
         self.link.draw()

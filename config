@@ -40,10 +40,13 @@
     <startRowSignsWidth>80</startRowSignsWidth>
     <startRowSignsHeigh>80</startRowSignsHeigh>
     <xToPasteClef>30</xToPasteClef>
+    <plusXToPasteTemp>30</plusXToPasteTemp>
 
     <shift>10</shift>
     <shiftForDot>10</shiftForDot>
     <startRowY>20</startRowY>
 
-
+    <smallCanvasWidth>100</smallCanvasWidth>
+    <smallCanvasHeigh>100</smallCanvasHeigh>
+    <sizeOfNums>18</sizeOfNums>
 </data>
