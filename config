@@ -17,7 +17,7 @@
     <lineEndPointForNodes>20</lineEndPointForNodes>
     <lineColor>black</lineColor>
 
-    <amountOfTimeInRow>1</amountOfTimeInRow>
+    <amountOfTimeInRow>2</amountOfTimeInRow>
     <amountOfNodeInTime>32</amountOfNodeInTime>
     <distanceBetweenLines>5</distanceBetweenLines>
 
@@ -27,7 +27,8 @@
     <notesWidth>58</notesWidth>
     <notesHeigh>58</notesHeigh>
     <notesExtraLineLen>8</notesExtraLineLen>
-    <notesShiftInAccord>8</notesShiftInAccord>
+    <notesShiftInAccordForHead>8</notesShiftInAccordForHead>
+    <notesShiftInAccordForTail>4</notesShiftInAccordForTail>
 
     <restsWidth>66</restsWidth>
     <restsHeigh>66</restsHeigh>

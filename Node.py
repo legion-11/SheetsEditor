@@ -25,7 +25,8 @@ WIDTH = float(e.find('canvasWidth').text)
 AMOUNT_OF_TIME_IN_ROW = int(e.find('amountOfTimeInRow').text)
 AMOUNT_OF_NODE_IN_TIME = int(e.find('amountOfNodeInTime').text)
 DISTANCE_BETWEN_NODES = (WIDTH - LINE_PAD_X - LINE_START_POINT_FOR_NODES - LINE_END_POINT_FOR_NODES) / (AMOUNT_OF_TIME_IN_ROW * AMOUNT_OF_NODE_IN_TIME)
-SHIFT_IN_ACCORD = int(e.find('notesShiftInAccord').text)
+SHIFT_IN_ACCORD_FOR_HEAD = int(e.find('notesShiftInAccordForHead').text)
+SHIFT_IN_ACCORD_FOR_TAIL = int(e.find('notesShiftInAccordForTail').text)
 
 class Node:
     """This node can be changed on notes by click on them"""
@@ -53,6 +54,7 @@ class Node:
         self.path = None
         self.link = None
         self.dot = None
+        self.shifted = None
 
     def drawPoint(self):
         """draw round by coordinates that was given at creation"""
@@ -71,13 +73,13 @@ class Node:
         return self.y - DISTANCE_BETWEEN_LINES//4 < eveY < self.y + DISTANCE_BETWEEN_LINES//4 and\
             self.x - DISTANCE_BETWEN_NODES // 2 < eveX < self.x + DISTANCE_BETWEN_NODES // 2
 
-
     def delImages(self):
         """delete images obj, tail, extraLines and path of Node"""
         if self.obj is not None:
             self.scanvas.canvas.delete(self.obj)
             if self.tail is not None:
                 self.scanvas.canvas.delete(self.tail)
+
             self.path = None
             # deletion of extraLines
             if self.numberOfLine <= 5:
@@ -100,6 +102,21 @@ class Node:
                             flag = True
                         else:
                             self.scanvas.rows[self.numberOfRow].lines[j].nodes[self.numberInLine].delExtraLine()
+            # update state of notes
+            for i in range(23):
+                if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes:
+                    self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].drawObj(
+                        self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path)
+                    break
+
+            for i in range(22, -1,-1):
+                if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes:
+                    self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].drawObj(
+                        self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path)
+                    break
+
+        elif self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].isRested():
+            self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].delImages()
 
     def getNode(self) -> list:
         """return list of numberOfRow, numberOfLine, numberInLine"""
@@ -112,39 +129,7 @@ class Node:
     def drawObj(self, path):
         """draw images of note"""
         if path in self.scanvas.notes:
-            self.delImages()
-            # del rest or barline if it is in the similar column
-            if self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].isRested():
-                self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].delImages()
-            # add extraLines
-            if self.numberOfLine <= 5:
-                for i in range(5, self.numberOfLine-1, -2):
-                    self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].addExtraLine()
-            elif self.numberOfLine >= 17:
-                for i in range(17, self.numberOfLine+1, 2):
-                    self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].addExtraLine()
-
-            # draw of head of the note
-            try:
-                if self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine + 1].nodes[self.numberInLine].isNotEmpty() or\
-                self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].isNotEmpty():
-                    self.obj = self.scanvas.canvas.create_image(self.x + SHIFT_IN_ACCORD, self.y, image=self.scanvas.notes[path][0])
-                else:
-                    self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][0])
-            except IndexError:
-                pass
-            self.path = path
-
-            # draw tail of the note
-            if self.scanvas.notes[path][1] is not None:
-                if self.numberOfLine > 11:
-                    self.tail = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][1])
-                else:
-                    if self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine + 1].nodes[self.numberInLine].isNotEmpty() or \
-                            self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].isNotEmpty():
-                        self.tail = self.scanvas.canvas.create_image(self.x + SHIFT_IN_ACCORD, self.y, image=self.scanvas.notes[path][2])
-            if self.link is not None:
-                self.link.draw()
+            self.drawNote(path)
 
         # draw image of rest on the 10's line
         elif path in self.scanvas.rests or path in self.scanvas.barlines:
@@ -160,13 +145,144 @@ class Node:
 
         # draw modificator
         elif path in self.scanvas.modifications:
-            self.delImages()
-            # draw of head of the rest
-            self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.modifications[path])
-            self.path = path
+            canDraw = True
+            for i in range(23):
+                if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes:
+                    canDraw = False
+                    break
+            if canDraw:
+                self.delImages()
+                # draw of head of the rest
+                self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.modifications[path])
+                self.path = path
 
         elif path in self.scanvas.startRowSigns:
             self.scanvas.rows[self.numberOfRow].changeClef(path)
+
+    def drawNote(self, path):
+        self.delImages()
+        similarNotes = []
+        notSimilarNotes = 0
+        numberOfNotesInRow = 0
+        tailsDown = 0
+        self.path = path
+        for i in range(self.numberOfLine, -1, -1):
+            if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path == self.path:
+                numberOfNotesInRow += 1
+                similarNotes.append(self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine])
+                if i < 11:
+                    tailsDown += 1
+            elif self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes and \
+                            self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path != self.path:
+                numberOfNotesInRow += 1
+                if notSimilarNotes == 0:
+                    notSimilarNotes += 1
+
+        similarNotes.reverse()
+
+        for i in range(self.numberOfLine + 1, 23):
+            if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path == self.path:
+                numberOfNotesInRow += 1
+                similarNotes.append(self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine])
+                if i < 11:
+                    tailsDown += 1
+            elif self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes and \
+                            self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path != self.path:
+                numberOfNotesInRow += 1
+                if notSimilarNotes <= 1:
+                    notSimilarNotes += 1
+
+        if numberOfNotesInRow < 8 and (len(similarNotes)-1 != 0 or notSimilarNotes < 2):
+            # del rest or barline if it is in the similar column
+            if self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].isRested():
+                self.scanvas.rows[self.numberOfRow].lines[10].nodes[self.numberInLine].delImages()
+            # add extraLines
+            if self.numberOfLine <= 5:
+                for i in range(5, self.numberOfLine - 1, -2):
+                    self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].addExtraLine()
+            elif self.numberOfLine >= 17:
+                for i in range(17, self.numberOfLine + 1, 2):
+                    self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].addExtraLine()
+
+            # draw of head of the note
+            if 0 < self.numberOfLine < 22:
+                if self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine + 1].nodes[
+                    self.numberInLine].isNotEmpty() and \
+                                self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine + 1].nodes[
+                                    self.numberInLine].shifted is False:
+                    self.obj = self.scanvas.canvas.create_image(self.x + SHIFT_IN_ACCORD_FOR_HEAD, self.y,
+                                                                image=self.scanvas.notes[path][0])
+                    self.shifted = True
+                    self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].drawObj(
+                        self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].path)
+
+                elif self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].isNotEmpty():
+                    self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][0])
+                    self.shifted = False
+                    self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].drawObj(
+                        self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].path)
+
+                else:
+                    self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][0])
+                    self.shifted = False
+
+            elif self.numberOfLine == 0:
+                if self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine + 1].nodes[
+                    self.numberInLine].isNotEmpty() and \
+                                self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine + 1].nodes[
+                                    self.numberInLine].shifted is False:
+                    self.obj = self.scanvas.canvas.create_image(self.x + SHIFT_IN_ACCORD_FOR_HEAD, self.y,
+                                                                image=self.scanvas.notes[path][0])
+                    self.shifted = True
+                    self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].drawObj(
+                        self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].path)
+
+                else:
+                    self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][0])
+                    self.shifted = False
+
+            else:
+                if self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].isNotEmpty():
+                    self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][0])
+                    self.shifted = False
+                    self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].drawObj(
+                    self.scanvas.rows[self.numberOfRow].lines[self.numberOfLine - 1].nodes[self.numberInLine].path)
+
+                else:
+                    self.obj = self.scanvas.canvas.create_image(self.x, self.y, image=self.scanvas.notes[path][0])
+                    self.shifted = False
+
+            # draw tail of the note
+            if self.scanvas.notes[path][1] is not None:
+
+                if tailsDown > len(similarNotes) - tailsDown:
+                    if similarNotes[-1].tail is not None:
+                        self.scanvas.canvas.delete(similarNotes[-1].tail)
+                    similarNotes[-1].tail = self.scanvas.canvas.create_image(similarNotes[-1].x,
+                                                                         similarNotes[-1].y,
+                                                                         image=self.scanvas.notes[path][2])
+                    for i in range(len(similarNotes) - 1):
+                        self.scanvas.canvas.delete(similarNotes[i].tail)
+                        similarNotes[i].tail = self.scanvas.canvas.create_line(similarNotes[i].x - SHIFT_IN_ACCORD_FOR_TAIL,
+                                                                               similarNotes[i].y,
+                                                                               similarNotes[i + 1].x - SHIFT_IN_ACCORD_FOR_TAIL,
+                                                                               similarNotes[i + 1].y)
+
+                else:
+                    similarNotes.reverse()
+                    if similarNotes[-1].tail is not None:
+                        self.scanvas.canvas.delete(similarNotes[-1].tail)
+                    similarNotes[-1].tail = self.scanvas.canvas.create_image(similarNotes[-1].x, similarNotes[-1].y,
+                                                                         image=self.scanvas.notes[path][1])
+                    for i in range(len(similarNotes) - 1):
+                        self.scanvas.canvas.delete(similarNotes[i].tail)
+                        similarNotes[i].tail = self.scanvas.canvas.create_line(similarNotes[i].x + SHIFT_IN_ACCORD_FOR_TAIL,
+                                                                               similarNotes[i].y,
+                                                                               similarNotes[i + 1].x + SHIFT_IN_ACCORD_FOR_TAIL,
+                                                                               similarNotes[i + 1].y)
+
+        else:
+            self.path = None
 
     def addExtraLine(self):
         """draw small line across node"""
@@ -184,6 +300,9 @@ class Node:
         can be used for checking if Node is not empty"""
         return self.path is not None
 
+    def isNote(self):
+        return self.path in self.scanvas.notes
+
     def drawLink(self, node):
         if self.link is not None:
             self.scanvas.canvas.delete(self.link)
@@ -196,16 +315,6 @@ class Node:
 
     def delLink(self):
         self.link.delete()
-
-    def highestNote(self):
-        for i in range(23):
-            if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes:
-                return self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine]
-
-    def lowestNote(self):
-        for i in range(23,-1,-1):
-            if self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine].path in self.scanvas.notes:
-                return self.scanvas.rows[self.numberOfRow].lines[i].nodes[self.numberInLine]
 
     def dotNote(self):
         if self.path in self.scanvas.notes:

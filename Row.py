@@ -49,8 +49,8 @@ class Row:
         if self.numerator is not None:
             self.scanvas.canvas.delete(self.numerator)
         self.numerator = self.scanvas.canvas.create_text(X_TO_PASTE_TEMP, self.lines[9].y,
-                                                     fill="black", font="Peterburg-а" + str(SIZE_OF_NUMS), text=numeratorNum)
+                                                     fill="black", font=("Algerian", str(SIZE_OF_NUMS)), text=numeratorNum)
         if self.denominator is not None:
             self.scanvas.canvas.delete(self.denominator)
         self.denominator = self.scanvas.canvas.create_text(X_TO_PASTE_TEMP, self.lines[13].y,
-                                                     fill="black", font="Peterburg-а" + str(SIZE_OF_NUMS), text=denominatorNum)
+                                                     fill="black", font=("Algerian", str(SIZE_OF_NUMS)), text=denominatorNum)

@@ -45,7 +45,7 @@ class Temp:
             if self.imageNum is not None:
                 self.smallcanvas.delete(self.imageNum)
             self.imageNum = self.smallcanvas.create_text(SMALL_CANVAS_WIDTH//2, SMALL_CANVAS_HEIGHT//2 - SIZE_OF_NUMS,
-                                         fill="black", font="Peterburg-а" + str(SIZE_OF_NUMS), text=self.e1.get())
+                                         fill="black", font=("Algerian", str(SIZE_OF_NUMS)), text=self.e1.get())
             self.numerator = self.e1.get()
             self.panel.numerator = str(self.e1.get())
 
@@ -53,7 +53,7 @@ class Temp:
             if self.imageDenum is not None:
                 self.smallcanvas.delete(self.imageDenum)
             self.imageDenum = self.smallcanvas.create_text(SMALL_CANVAS_WIDTH//2, SMALL_CANVAS_HEIGHT//2 + SIZE_OF_NUMS,
-                                         fill="black", font="Peterburg-а" + str(SIZE_OF_NUMS), text=self.e2.get())
+                                         fill="black", font=("Algerian", str(SIZE_OF_NUMS)), text=self.e2.get())
             self.denominator = self.e2.get()
             self.panel.denominator = str(self.e2.get())
 
