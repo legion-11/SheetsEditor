@@ -4,6 +4,7 @@ SHIFT = int(e.find('shift').text)
 
 
 class Link:
+    """slur class"""
     line = None
 
     def __init__(self, scanvas, node1, node2):
@@ -23,9 +24,11 @@ class Link:
                 self.node1 = node2
 
     def draw(self):
+        """draw line(slur)"""
         self.line = self.scanvas.canvas.create_line(self.createPoints())
 
     def delete(self):
+        """delate slur"""
         self.scanvas.canvas.delete(self.line)
         self.line = None
         if self.node1 is not None:
@@ -35,6 +38,7 @@ class Link:
         del self
 
     def createPoints(self):
+        """creates points of slur parabola"""
         x1, y1 = self.node1.x, self.node1.y
         x2, y2 = self.node2.x, self.node2.y
         if self.node1.numberOfLine < 12 or self.node2.numberOfLine < 12:

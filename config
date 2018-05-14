@@ -28,7 +28,7 @@
     <notesHeigh>58</notesHeigh>
     <notesExtraLineLen>8</notesExtraLineLen>
     <notesShiftInAccordForHead>8</notesShiftInAccordForHead>
-    <notesShiftInAccordForTail>4</notesShiftInAccordForTail>
+    <notesShiftInAccordForTail>5</notesShiftInAccordForTail>
 
     <restsWidth>66</restsWidth>
     <restsHeigh>66</restsHeigh>
@@ -54,5 +54,8 @@
 
     <distanceToDrawComposedTail>20</distanceToDrawComposedTail>
     <distanceBeetwenComposedTails>5</distanceBeetwenComposedTails>
+
+    <lenShortComposedLine>10</lenShortComposedLine>
+
 
 </data>

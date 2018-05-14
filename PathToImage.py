@@ -24,7 +24,7 @@ modifications = ['assets/modifications/double flat.png',
                  'assets/modifications/sharp.png']
 temp = ['assets/temp/dotnote.png',
         'assets/temp/slur.png',
-        'assets/temp/staccato.png',
+        #'assets/temp/staccato.png',
         'assets/temp/compose.png']
 
 aboveSigns = ['assets/abovesigns/fermata .png']
@@ -49,7 +49,7 @@ notes = ['assets/notes/breve.png',
          'assets/notes/sixty-fourth note.png',
          'assets/notes/one hundred twenty-eighth note.png']
 
-ColPath = startRowSigns+ time + barlines + modifications + temp + aboveSigns + rests + notes
+ColPath = startRowSigns + time + barlines + modifications + temp + rests + notes
 
 heads = ['assets/heads/breve.png',
          'assets/heads/filled.png',

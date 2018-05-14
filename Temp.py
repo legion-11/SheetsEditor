@@ -1,4 +1,4 @@
-from tkinter import Entry, Toplevel,Canvas, Button, StringVar
+from tkinter import Entry, Toplevel, Canvas, Button, StringVar
 
 import xml.etree.ElementTree
 e = xml.etree.ElementTree.parse('config').getroot()
@@ -16,6 +16,7 @@ class Temp:
 
     def __init__(self, root, panel):
         self.win = Toplevel(root)
+        self.win.title('Temp')
         self.panel = panel
         self.smallcanvas = Canvas(self.win, width=SMALL_CANVAS_WIDTH, height=SMALL_CANVAS_HEIGHT, background=BG_COLOR)
 

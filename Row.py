@@ -29,9 +29,11 @@ class Row:
         self.changeClef(pathClef)
 
     def draw(self):
+        """draw lines"""
         [line.draw() for line in self.lines]
 
     def hide(self):
+        """delete lines"""
         if self.numerator is not None:
             self.scanvas.canvas.delete(self.numerator)
         if self.denominator is not None:
@@ -40,18 +42,24 @@ class Row:
         [line.hide() for line in self.lines]
 
     def isCollision(self, eveX, eveY):
+        """
+        return list with [index of Row, index of Line, index of Node] that was clicked on
+        return None if click was far
+        """
         if self.y - NODE_WORK_RADIUS <= eveY <= self.y + NODE_WORK_RADIUS * 23:  # check if move was near row
             for line in self.lines:
                 if line.isCollision(eveX, eveY):
                     return line.isCollision(eveX, eveY)
 
     def changeClef(self, path):
+        """change the clef of row"""
         if self.clef is not None:
             self.scanvas.canvas.delete(self.clef)
         self.pathClef = path
         self.clef = self.scanvas.canvas.create_image(X_TO_PASTE_CLEF, self.y + DISTANCE_BETWEEN_LINES * 10, image=self.scanvas.startRowSigns[path])
 
     def changeTemp(self, numeratorNum, denominatorNum):
+        """change temp by click on row"""
         if self.numerator is not None:
             self.scanvas.canvas.delete(self.numerator)
         self.numerator = self.scanvas.canvas.create_text(X_TO_PASTE_TEMP, self.lines[9].y,
