@@ -31,17 +31,22 @@ class Main:
         self.root.mainloop()
 
     def open(self):
+        self.scanvas.activeNode = None
         file = filedialog.askopenfilename(initialdir="/", title="Select file",
                                                    filetypes=(("SheetsEditor files", "*.she"), ("all files", "*.*")))
-        for i in self.scanvas.rows:
-            i.hide()
-        self.scanvas.rows.clear()
         try:
             with open(file, "rb") as fileR:
                 tmp = load(fileR)
                 data = tmp['data']
                 links = tmp['links']
-                clefs = tmp['clefs']
+                clefsAndTemp = tmp['clefsAndTemp']
+
+            for i in self.scanvas.rows:
+                i.hide()
+            self.scanvas.rows.clear()
+            self.scanvas.canvas.delete(self.scanvas.activeNode)
+            self.scanvas.activeNode = None
+
             for row in range(len(data)):
                 self.scanvas.createRows('')
                 for line in range(len(data[row])):
@@ -52,17 +57,26 @@ class Main:
                                 self.scanvas.rows[links[row][line][node][0]]
                                             .lines[links[row][line][node][1]]
                                             .nodes[links[row][line][node][2]])
-            for i in range(len(clefs)):
-                self.scanvas.rows[i].changeClef(clefs[i])
+            for i in range(len(clefsAndTemp)):
+                self.scanvas.rows[i].changeClef(clefsAndTemp[i][0])
+                if clefsAndTemp[i][1] is not None:
+                    self.scanvas.rows[i].changeTemp(clefsAndTemp[i][1])
+                if clefsAndTemp[i][2] is not None:
+                    self.scanvas.rows[i].changeTemp(clefsAndTemp[i][2])
+
         except FileNotFoundError:
+            pass
+        except:
             pass
 
     def save(self):
         file = filedialog.asksaveasfilename(initialdir="/", title="Select file",
-                                             filetypes=(("SheetsEditor files", "*.she"), ("all files", "*.*"))) + '.she'
+                                             filetypes=(("SheetsEditor files", "*.she"), ("all files", "*.*")))
+        if file[-4:] != '.she':
+            file += '.she'
         data = []
         links = []
-        clefs = []
+        clefsAndTemp = []
         for i in self.scanvas.rows:
             data.append([])
             links.append([])
@@ -72,13 +86,13 @@ class Main:
                 for k in j.nodes:
                     data[-1][-1].append(k.path)
                     if k.link is not None and k.link.node2 == k:
-                        links[-1][-1].append(k.link.node1.getNode())
+                        links[-1][-1].append(k.link.node1.getNodePosition())
                     else:
                         links[-1][-1].append(None)
         for i in self.scanvas.rows:
-            clefs.append(i.pathClef)
+            clefsAndTemp.append([i.pathClef, i.numeratorNum, i.denominatorNum])
         with open(file, "wb") as fileW:
-            dump({'data': data, 'links': links, 'clefs': clefs}, fileW)
+            dump({'data': data, 'links': links, 'clefsAndTemp': clefsAndTemp}, fileW)
 
     def edit(self):
         pass

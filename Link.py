@@ -27,8 +27,12 @@ class Link:
 
     def delete(self):
         self.scanvas.canvas.delete(self.line)
-        self.node1.setLink(None)
-        self.node2.setLink(None)
+        self.line = None
+        if self.node1 is not None:
+            self.node1.link = None
+        if self.node2 is not None:
+            self.node2.link = None
+        del self
 
     def createPoints(self):
         x1, y1 = self.node1.x, self.node1.y

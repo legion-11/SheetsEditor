@@ -37,11 +37,11 @@ class ScrollableCanvas(tk.Frame):
         'assets/notes/whole note.png':         ['assets/heads/whole note.png', None, None],
         'assets/notes/half note.png':          ['assets/heads/unfilled.png', 'assets/tails/untailed.png', 'assets/tails/untailed down.png'],
         'assets/notes/quarter note.png':       ['assets/heads/filled.png', 'assets/tails/untailed.png', 'assets/tails/untailed down.png'],
-        'assets/notes/eighth note.png':        ['assets/heads/filled.png', 'assets/tails/eighth tail.png', 'assets/tails/eighth tail down.png'],
-        'assets/notes/sixteenth note.png':     ['assets/heads/filled.png', 'assets/tails/sixteenth tail.png', 'assets/tails/sixteenth tail down.png'],
-        'assets/notes/thirty-second note.png': ['assets/heads/filled.png', 'assets/tails/thirty-second tail.png', 'assets/tails/thirty-second tail down.png'],
-        'assets/notes/sixty-fourth note.png':  ['assets/heads/filled.png', 'assets/tails/sixty-fourth tail.png', 'assets/tails/sixty-fourth tail down.png'],
-        'assets/notes/one hundred twenty-eighth note.png': ['assets/heads/filled.png', 'assets/tails/one hundred twenty-eighth tail.png', 'assets/tails/one hundred twenty-eighth tail down.png']
+        'assets/notes/eighth note.png':        ['assets/heads/filled.png', 'assets/tails/eighth tail.png', 'assets/tails/eighth tail down.png', 1],
+        'assets/notes/sixteenth note.png':     ['assets/heads/filled.png', 'assets/tails/sixteenth tail.png', 'assets/tails/sixteenth tail down.png', 2],
+        'assets/notes/thirty-second note.png': ['assets/heads/filled.png', 'assets/tails/thirty-second tail.png', 'assets/tails/thirty-second tail down.png', 3],
+        'assets/notes/sixty-fourth note.png':  ['assets/heads/filled.png', 'assets/tails/sixty-fourth tail.png', 'assets/tails/sixty-fourth tail down.png', 4],
+        'assets/notes/one hundred twenty-eighth note.png': ['assets/heads/filled.png', 'assets/tails/one hundred twenty-eighth tail.png', 'assets/tails/one hundred twenty-eighth tail down.png', 5]
     }
 
     rests = {}
@@ -54,7 +54,9 @@ class ScrollableCanvas(tk.Frame):
 
     dot = {}
 
-    node = None  # Node for creation Links between this Node and another
+    nodeForSlur = None  # Node for creation Links between this Node and another
+
+    nodeForCompose = None
 
     def __init__(self, root, panel):
         tk.Frame.__init__(self, root, width=WIDTH, height=HEIGH)
@@ -104,30 +106,37 @@ class ScrollableCanvas(tk.Frame):
 
     def mouce_click(self, event):
         """temporary class to operate clicks"""
-        if event.num == 1:  # click <Button-1>
-            if self.activeNode is not None and self.panel.getPathToImage() not in temp + time:
+        if event.num == 1 and self.activeNode is not None:  # click <Button-1>
+            if  self.panel.getPathToImage() not in temp + time:
                 self.activeNode.drawObj(self.panel.getPathToImage())
 
-            elif self.activeNode is not None and self.panel.getPathToImage() == 'assets/temp/slur.png':
-                if self.node is None and (self.activeNode.path in self.notes):
-                    self.node = self.activeNode
+            elif self.panel.getPathToImage() == 'assets/temp/slur.png':
+                if self.nodeForSlur is None and (self.activeNode.path in self.notes):
+                    self.nodeForSlur = self.activeNode
 
-                elif self.node is not None and\
+                elif self.nodeForSlur is not None and\
                         (self.activeNode.path in self.notes) and\
-                        (self.node.numberOfRow == self.activeNode.numberOfRow) and\
-                        (self.node.numberInLine != self.activeNode.numberInLine):
-                    self.node.drawLink(self.activeNode)
-                    self.node = None
+                        (self.nodeForSlur.numberOfRow == self.activeNode.numberOfRow) and\
+                        (self.nodeForSlur.numberInLine != self.activeNode.numberInLine):
+                    self.nodeForSlur.drawLink(self.activeNode)
+                    self.nodeForSlur = None
 
-            elif self.activeNode is not None and self.panel.getPathToImage() == 'assets/temp/dotnote.png':
+            elif self.panel.getPathToImage() == r'assets/temp/dotnote.png':
                 self.activeNode.dotNote()
 
-            elif self.activeNode is not None and self.panel.getPathToImage() == r'assets/startrowsigns/common time.png':
-                print('a')
-                self.rows[self.activeNode.numberOfRow].chageTemp(self.panel.numerator, self.panel.denominator)
+            elif self.panel.getPathToImage() == r'assets/temp/compose.png':
+                if self.nodeForCompose is None:
+                    self.nodeForCompose = self.activeNode
+                else:
+                    self.activeNode.composeWith(self.nodeForCompose)
+                    self.nodeForCompose = self.activeNode
+
+            elif self.panel.getPathToImage() == r'assets/startrowsigns/common time.png':
+                self.rows[self.activeNode.numberOfRow].changeTemp(self.panel.numerator, self.panel.denominator)
 
         elif event.num == 3:  # click <Button-3>
-            self.node = None
+            self.nodeForSlur = None
+            self.nodeForCompose = None
             if self.activeNode is not None:
                 self.activeNode.delImages()
 
@@ -144,7 +153,7 @@ class ScrollableCanvas(tk.Frame):
     def createRows(self, event, clef=r'assets/startrowsigns/g clef.png'):
         if len(self.rows) == 0:
             self.rows.append(Row(START_Y, len(self.rows), self, clef))
-            self.rows[0].chageTemp(self.panel.numerator, self.panel.denominator)
+            self.rows[0].changeTemp(self.panel.numerator, self.panel.denominator)
         else:
             if self.rows[-1].y < CANVAS_HEIGH - 2 * DISTANCE_BETWEEN_LINES * 28:
                 self.rows.append(Row(self.rows[-1].y + DISTANCE_BETWEEN_LINES * 28, len(self.rows), self, clef))

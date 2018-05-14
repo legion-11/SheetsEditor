@@ -52,4 +52,7 @@
     <smallCanvasHeigh>100</smallCanvasHeigh>
     <sizeOfNums>18</sizeOfNums>
 
+    <distanceToDrawComposedTail>20</distanceToDrawComposedTail>
+    <distanceBeetwenComposedTails>5</distanceBeetwenComposedTails>
+
 </data>

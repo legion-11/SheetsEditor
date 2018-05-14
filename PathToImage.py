@@ -62,3 +62,4 @@ tails = ['assets/tails/eighth tail.png',
          'assets/tails/sixty-fourth tail.png',
          'assets/tails/thirty-second tail.png',
          'assets/tails/untailed.png']
+
